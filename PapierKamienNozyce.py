@@ -1,53 +1,47 @@
-import random, sys
-print("Papier, Kamień, Nożyce")
-# zmienne do przechowywania ilości zwycięstw, porażek, remisów
+import random
+
+# Global variables to keep track of the game state
 wins = 0
 losses = 0
 draws = 0
 
-while True: #pętla główna gry
-    print('%s zwycięstw, %s porażek, %s remisów' %(wins, losses, draws))
-    while True: #pętla danych wejściowych gracza
-        print("Podaj swój wybór: (k)amień, (p)apier, (n)ożyce lub (w)yjście")
-        playerMove = input()
-        if playerMove == "w":
-            sys.exit() #zakończenie działania programu
-        if playerMove == "k" or playerMove == "p" or playerMove == "n":
-            break #opuszczenie pętli danych wejściowych gracza
-        print("Wpisz literę k, p, n lub w.")
-    #wyświetlanie wyboru dokonanego przez gracza
-    if playerMove == "k":
-        print("Kamień vs ....")
-    elif playerMove == "p":
-        print("Papier vs ....")
-    elif playerMove == "n":
-        print("Nożyce vs ....")
+def playerMove():
+    """Handles player input."""
+    move = input("Wybierz (k)amień, (p)apier, (n)ożyce lub (w)yjdź: ").lower()
+    while move not in ['k', 'p', 'n', 'w']:
+        print("Nieprawidłowy wybór. Spróbuj ponownie.")
+        move = input("Wybierz (k)amień, (p)apier, (n)ożyce lub (w)yjdź: ").lower()
+    return move
 
-    #wyświetlanie wyboru dokonanego przez komputer
-    randomNumber = random.randint(1,3)
-    if randomNumber == 1:
-        computerMove = "k"
-        print("Kamień")
-    elif randomNumber == 2:
-        computerMove = "p"
-        print("Papier")
-    elif randomNumber == 3:
-        computerMove = "n"
-        print("Nożyce")
-    #wyświetlanie i rejestrowanie stanu gry
+def computerMove():
+    """Generates the computer's move."""
+    return random.choice(['k', 'p', 'n'])
 
-    if playerMove == computerMove:
-        print("To remis!")
-        draws = draws + 1
-    elif playerMove == "k" and computerMove == "n":
-        print("Wygrana!")
-        wins = wins + 1
-    elif playerMove == "p" and computerMove == "k":
-        print("Wygrana!")
-        wins = wins + 1
-    elif playerMove == "n" and computerMove == "p":
-        print("Wygrana!")
-        wins = wins + 1
+def game_result(player, computer):
+    """Determines the result of the game."""
+    global wins, losses, draws
+    if player == computer:
+        draws += 1
+        return "To remis!"
+    elif (player == 'k' and computer == 'n') or (player == 'p' and computer == 'k') or (player == 'n' and computer == 'p'):
+        wins += 1
+        return "Wygrana!"
     else:
-        print("Wygrywa komputer!")
-        losses = losses + 1
+        losses += 1
+        return "Przegrana!"
+
+def main():
+    global wins, losses, draws
+    print("Witaj w grze Papier, Kamień, Nożyce!")
+    while True:
+        player = playerMove()
+        if player == 'w':
+            break
+        computer = computerMove()
+        print(f"Komputer wybrał: {computer}")
+        result = game_result(player, computer)
+        print(result)
+        print(f"Wygrane: {wins}, Przegrane: {losses}, Remisy: {draws}")
+
+if __name__ == "__main__":
+    main()
