@@ -1,5 +1,7 @@
 import random
 
+### random comment
+
 # Global variables to keep track of the game state
 wins = 0
 losses = 0
